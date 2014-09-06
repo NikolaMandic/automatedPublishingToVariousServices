@@ -1,0 +1,8 @@
+defmodule Media.Youtube do
+  use GenServer
+  def __init__():
+    {:ok}
+  end
+  def start_link():
+  end
+end
