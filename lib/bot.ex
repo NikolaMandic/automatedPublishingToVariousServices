@@ -14,7 +14,7 @@ defmodule Bot do
       worker(Media.Website, []),
       worker(Media.Twitter, []),
       worker(Media.Grabcad, []),
-      worker(Media.Thingiverse, []),
+      worker(Media.Thingiverse, [[name: :thingiverse]]),
       worker(Media.Dropbox, []),
       worker(Media.Flikr, []),
       worker(Media.Instagram, []),
@@ -36,10 +36,22 @@ defmodule Bot do
     token_store:   %OAuth2Ex.FileStorage{
     file_path: System.user_home <> "/oauth2ex.google.token"}
     )
-IO.puts OAuth2Ex.get_authorize_url(config)
+
+#IO.puts OAuth2Ex.get_authorize_url(config)
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Bot.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+  def postStuff(post) do
+      #GenServer.call(:thingiverse, :post)
+      turl = Media.Thingiverse.getToken(post)
+      pubUrl = Media.Github.getPubUrl(post)
+#      links=%Links{thingiverse: turl, github: pubUrl}
+      links = [turl,pubUrl] 
+	#++ ["http://instagram.com/mn080202","gitstash repo \"uControllerBot3dPrinting\""]
+
+      GenServer.call :email,{:post, post,links}
+      GenServer.call :Twitter,{:post, post,links}
   end
 end

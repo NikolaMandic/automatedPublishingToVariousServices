@@ -4,6 +4,6 @@ defmodule Media.Flikr do
     	{:ok,[]}
     end
     def start_link(opts \\ [])do
-    	 GenServer.start_link(__MODULE__, :ok, opts)
+    	 GenServer.start_link(__MODULE__, :ok, name: :flikr)
     end
 end
